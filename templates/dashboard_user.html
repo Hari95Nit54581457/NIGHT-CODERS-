@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Dashboard - QuickDesk</title>
+    <title>User Dashboard </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar">
     <div class="nav-left">
         <h1 class="logo">QuickDesk</h1>
@@ -25,33 +24,37 @@
     </div>
 </nav>
 
-<!-- Dashboard Content -->
 <div class="dashboard-content">
     <div class="ask-bar" onclick="openModal()">What's your query or issue?</div>
 
-    <div class="ticket-feed">
-        {% for ticket in tickets.items %}
-        <div class="ticket-card">
-            <div class="ticket-body">
-                <div class="ticket-header">
-                    <strong>{{ ticket.question }}</strong>
-                    {% for tag in ticket.tags.split(',') %}
-                        <span class="tag">{{ tag.strip() }}</span>
-                    {% endfor %}
-                </div>
-                <div class="ticket-meta">
-                    Status: 
-                    <span class="tag {% if ticket.status == 'Resolved' %}tag-resolved{% elif ticket.status == 'In Progress' %}tag-progress{% else %}tag-open{% endif %}">
-                        {{ ticket.status }}
-                    </span>
-                </div>
-                <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}">View Thread</a>
+        <div class="ticket-feed">
+          {% for ticket in tickets.items %}
+            <div class="ticket-card" data-ticket-id="{{ ticket.id }}">
+        <div class="vote-box">
+          <button type="button" onclick="handleVote('up', this)">&#9650;</button>
+         <div class="vote-count">{{ ticket.upvotes - ticket.downvotes }}</div>
+            <button type="button" onclick="handleVote('down', this)">&#9660;</button>
             </div>
+        <div class="ticket-body">
+            <div class="ticket-header">
+                <strong>{{ ticket.question }}</strong>
+                {% for tag in ticket.tags.split(',') %}
+                    <span class="tag">{{ tag.strip() }}</span>
+                {% endfor %}
         </div>
+        <div class="ticket-meta">
+            Status: 
+            <span class="tag {% if ticket.status == 'Resolved' %}tag-resolved{% elif ticket.status == 'In Progress' %}tag-progress{% else %}tag-open{% endif %}">
+                {{ ticket.status }}
+            </span>
+        </div>
+        <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}" class="button">View Thread</a>
+    </div>
+</div>
+
         {% endfor %}
     </div>
 
-    <!-- Pagination -->
     <div class="pagination">
         {% if tickets.has_prev %}
             <a href="{{ url_for('dashboard_user', page=tickets.prev_num) }}">&laquo; Previous</a>
@@ -63,7 +66,6 @@
     </div>
 </div>
 
-<!-- Modal for Create Ticket -->
 <div class="modal" id="askModal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -86,7 +88,6 @@
     </div>
 </div>
 
-<!-- JS for modal -->
 <script>
     function openModal() {
         document.getElementById("askModal").style.display = "block";
@@ -102,7 +103,34 @@
             modal.style.display = "none";
         }
     };
+
+    // New function to handle upvote/downvote without a page reload
+    function handleVote(action, button) {
+        const ticketCard = button.closest('.ticket-card');
+        const ticketId = ticketCard.dataset.ticketId;
+        const voteCountElement = ticketCard.querySelector('.vote-count');
+        
+        fetch(`/vote/${ticketId}/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.score !== undefined) {
+                voteCountElement.innerText = data.score;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while trying to vote. Please try again.');
+        });
+    }
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
