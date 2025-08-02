@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Support Dashboard - QuickDesk</title>
+    <title>Support Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -26,7 +26,7 @@
 
 <!-- Content -->
 <div class="dashboard-content">
-    <h2>All Support Tickets</h2>
+    <h2>All Questions</h2>
 
     <div class="ticket-feed">
         {% for ticket in tickets %}
@@ -48,7 +48,7 @@
                     <span class="{{ 'open' if ticket.status == 'Open' else 'closed' }}">
                         ● {{ ticket.status }}
                     </span>
-                    <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}" class="button">Open Ticket</a>
+                    <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}" class="button">Open Question</a>
                 </div>
             </div>
         </div>
