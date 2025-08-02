@@ -184,10 +184,10 @@ def dashboard_support():
 def view_ticket(ticket_id):
     if current_user.role != 'support':
         flash("Access denied.")
-        return redirect(url_for('dashboard_user'))
-    
-    ticket = Ticket.query.get_or_404(ticket_id)
+        return redirect(url_for('dashboard_user'))   
 
+    ticket = Ticket.query.get_or_404(ticket_id)
+    return render_template('ticket_detail.html', ticket=ticket)
     if request.method == 'POST':
         ticket.reply = request.form['reply']
         ticket.status = request.form['status']
