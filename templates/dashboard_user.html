@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - QuickDesk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <h1 class="logo">QuickDesk</h1>
+    </div>
+    <div class="nav-right">
+        <span class="nav-item">Dashboard</span>
+        <img src="{{ url_for('static', filename='icons8-notification-bell.svg') }}" class="icon" alt="Notifications">
+        <div class="profile-container">
+            <img src="{{ url_for('static', filename='profile-placeholder.png') }}" class="profile-pic" alt="Profile">
+            <div class="profile-dropdown">
+                <a href="#">Profile Settings</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Dashboard Content -->
+<div class="dashboard-content">
+    <div class="ask-bar" onclick="openModal()">What's your query or issue?</div>
+
+    <div class="ticket-feed">
+        {% for ticket in tickets.items %}
+        <div class="ticket-card">
+            <div class="ticket-body">
+                <div class="ticket-header">
+                    <strong>{{ ticket.question }}</strong>
+                    {% for tag in ticket.tags.split(',') %}
+                        <span class="tag">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                <div class="ticket-meta">
+                    Status: 
+                    <span class="tag {% if ticket.status == 'Resolved' %}tag-resolved{% elif ticket.status == 'In Progress' %}tag-progress{% else %}tag-open{% endif %}">
+                        {{ ticket.status }}
+                    </span>
+                </div>
+                <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}">View Thread</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if tickets.has_prev %}
+            <a href="{{ url_for('dashboard_user', page=tickets.prev_num) }}">&laquo; Previous</a>
+        {% endif %}
+        <span>Page {{ tickets.page }} of {{ tickets.pages }}</span>
+        {% if tickets.has_next %}
+            <a href="{{ url_for('dashboard_user', page=tickets.next_num) }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal for Create Ticket -->
+<div class="modal" id="askModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Create a Ticket</h2>
+        <form action="{{ url_for('create_ticket') }}" method="POST" enctype="multipart/form-data">
+            <label>Question</label>
+            <input type="text" name="question" required>
+
+            <label>Description</label>
+            <textarea name="description" required></textarea>
+
+            <label>Tags (comma-separated)</label>
+            <input type="text" name="tags">
+
+            <label>Attachment</label>
+            <input type="file" name="attachment">
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<!-- JS for modal -->
+<script>
+    function openModal() {
+        document.getElementById("askModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("askModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById("askModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>
+
+</body>
+</html>

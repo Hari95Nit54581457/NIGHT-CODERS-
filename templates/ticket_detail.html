@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket - QuickDesk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <h1 class="logo">QuickDesk</h1>
+    </div>
+    <div class="nav-right">
+        <span class="nav-item">Support</span>
+        <div class="profile-container">
+            <img src="{{ url_for('static', filename='profile-placeholder.png') }}" class="profile-pic" alt="Profile">
+            <div class="profile-dropdown">
+                <a href="#">Settings</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Ticket Content -->
+<div class="ticket-detail-container">
+    <div class="ticket-box">
+        <div class="ticket-title">
+            <h2>{{ ticket.question }}</h2>
+            <span class="status-tag {{ ticket.status | lower }}">{{ ticket.status }}</span>
+        </div>
+
+        <div class="ticket-meta">
+            <p><strong>Posted by:</strong> {{ ticket.user.name }}</p>
+            <p><strong>Tags:</strong> 
+                {% for tag in ticket.tags.split(',') %}
+                    <span class="tag">{{ tag.strip() }}</span>
+                {% endfor %}
+            </p>
+            {% if ticket.attachment %}
+                <p><strong>Attachment:</strong>
+                    <a href="{{ url_for('uploaded_file', filename=ticket.attachment) }}" target="_blank">View</a>
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="ticket-description">
+            <p>{{ ticket.description }}</p>
+        </div>
+    </div>
+
+    <div class="reply-section">
+        <form method="POST">
+            <textarea name="reply" rows="6" placeholder="Type your reply here..." required>{{ ticket.reply or '' }}</textarea>
+            
+            <div class="form-options">
+                <label for="status">Status:</label>
+                <select name="status">
+                    <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %}>Open</option>
+                    <option value="In Progress" {% if ticket.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Resolved" {% if ticket.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                </select>
+
+                <button type="submit">Post Reply</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

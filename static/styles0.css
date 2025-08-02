@@ -1,0 +1,122 @@
+:root {
+  --primary-color: #14b8a6; /* Deep Teal */
+  --secondary-color: #2dd4bf; /* Lighter Teal */
+  --text-color: #1f2937; /* Dark Charcoal */
+  --bg-color: #eef2ff; /* Light Lavender Background */
+  --border-color: #e5e7eb;
+  --card-bg-color: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --font-family: "Inter", sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  color: var(--text-color);
+  flex-direction: column;
+}
+
+.logo-text {
+  font-size: 3rem; /* Larger font size for the logo */
+  font-weight: 800; /* Extra bold */
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  letter-spacing: -0.05em; /* Tighter letter spacing */
+  text-shadow: 1px 1px 2px var(--shadow-color); /* Subtle shadow */
+}
+
+form {
+  background-color: var(--card-bg-color);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -1px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 28rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--secondary-color);
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-1px);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+a {
+  text-align: center;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--secondary-color);
+}
+
+@media (max-width: 480px) {
+  form {
+    padding: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  body {
+    padding: 0.5rem;
+  }
+
+  .logo-text {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+}

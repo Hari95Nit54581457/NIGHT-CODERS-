@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Conversation - QuickDesk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <h1 class="logo">QuickDesk</h1>
+    </div>
+    <div class="nav-right">
+        <span class="nav-item">My Ticket</span>
+        <div class="profile-container">
+            <img src="{{ url_for('static', filename='profile-placeholder.png') }}" class="profile-pic">
+            <div class="profile-dropdown">
+                <a href="#">Settings</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="ticket-detail-container">
+    <h2>{{ ticket.question }}</h2>
+    <p><strong>Status:</strong> {{ ticket.status }}</p>
+    <p><strong>Description:</strong> {{ ticket.description }}</p>
+    <hr>
+
+    <div class="thread-section">
+        <h3>Conversation</h3>
+        {% for message in threads %}
+            <div class="message {{ message.sender_role }}">
+                <strong>{{ message.sender_role.capitalize() }}:</strong>
+                <p>{{ message.message }}</p>
+                <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="POST">
+        <textarea name="followup" rows="4" placeholder="Ask a follow-up question..." required></textarea>
+        <button type="submit">Post Follow-up</button>
+    </form>
+</div>
+
+</body>
+</html>
